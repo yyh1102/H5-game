@@ -3,4 +3,4 @@
  * 使用create.js 游戏引擎
  * 体验传送门：
    * [围住神经猫](http://www.yueliangquan.com/madcat)
-   * [看你有多色](http://www.yueliangquan.com/eyepower)
+   * [测测你的眼力](http://www.yueliangquan.com/eyepower)
