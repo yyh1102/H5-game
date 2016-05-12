@@ -2,6 +2,8 @@ var GAME={
     stage:document.getElementById("stage"),
     map:[],
     blkArr:[],
+    maxNum:0,
+    score:0,
     init:function(){
         this.map=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
         this.createBlock();
@@ -12,7 +14,11 @@ var GAME={
             if(e){
                 GAME.slide(e.keyCode);
             }
-        }
+        };
+        setInterval(function(){
+            var score=document.getElementById("score");
+            score.innerHTML=GAME.score;
+        })
     },
     createBlock:function(){
         var blk=new Block(),
@@ -30,11 +36,19 @@ var GAME={
     merge:function(prevBlock,currBlock){
         var prev=prevBlock.block.innerHTML;
         var curr=currBlock.block.innerHTML;
+        //console.log(prev,curr);
         if(prev==curr){
+            var prevx=prevBlock.x,
+                prevy=prevBlock.y;
+            prevBlock.position(currBlock.x,currBlock.y);
             currBlock.setNumber(curr * 2);
-            prevBlock.translate(currBlock.x,currBlock.y);
-            GAME.map[prevBlock.y][prevBlock.x]=0;
-            GAME.stage.removeChild(prevBlock.block);
+            prevBlock.block.style.zIndex=-1;
+            this.map[prevy][prevx]=0;
+            this.score+=curr*2;
+            setTimeout(function(){
+                this.stage.removeChild(prevBlock.block);
+                delete prevBlock;
+            },300);
         }
     },
     slide:function(keycode){
@@ -42,19 +56,30 @@ var GAME={
         if(keycode==37){//Left
             for(i=0;i<4;i++){
                 k=0;
-                for(j=0;j<3;j++){
+                for(j=0;j<3;j++){//所有块先移动
                     if(this.map[i][j]==0){
                         if(k==0) k=j+1;
                         while(k<4 && this.map[i][k]==0 && k++);
                         if(k==4) break;
-                        this.map[i][k].translate(j,i);
-                        GAME.map[i][j]=GAME.map[i][k];
-                        GAME.map[i][k]=0;
+                        this.map[i][k].position(j,i);
+                        this.map[i][j]=this.map[i][k];
+                        this.map[i][k]=0;
                     }
                 }
-                for(j=0;j<3;j++){
-                    if(this.map[i][j]!=0 && this.map[i][j+1]!=0){
-                        this.merge(this.map[i][j+1],this.map[i][j]);
+                for(j=0;j<3;j++){//相邻等值块合并
+                    if(this.map[i][j]!=0 && this.map[i][j+1]!=0) {
+                        this.merge(this.map[i][j + 1], this.map[i][j]);
+                    }
+                }
+                k=0;
+                for(j=0;j<3;j++){//消除合并后可能产生的空块
+                    if(this.map[i][j]==0){
+                        if(k==0) k=j+1;
+                        while(k<4 && this.map[i][k]==0 && k++);
+                        if(k==4) break;
+                        this.map[i][k].position(j,i);
+                        this.map[i][j]=this.map[i][k];
+                        this.map[i][k]=0;
                     }
                 }
             }
@@ -62,56 +87,116 @@ var GAME={
         if(keycode==38){//Top
             for(i=0;i<4;i++){
                 k=0;
-                for(j=0;j<3;j++){
+                for(j=0;j<3;j++){//所有块先移动
                     if(this.map[j][i]==0){
                         if(k==0) k=j+1;
                         while(k<4 && this.map[k][i]==0 && k++);
                         if(k==4) break;
-                        this.map[k][i].translate(i,j);
-                        GAME.map[j][i]=GAME.map[k][i];
-                        GAME.map[k][i]=0;
-
+                        this.map[k][i].position(i,j);
+                        this.map[j][i]=this.map[k][i];
+                        this.map[k][i]=0;
                     }
                 }
-                for(j=0;j<3;j++){
-                    if(this.map[j][i]!=0 && this.map[j+1][i]!=0){
-                        this.merge(this.map[j+1][i],this.map[j][i]);
+                for(j=0;j<3;j++){//相邻等值块合并
+                    if(this.map[j][i]!=0 && this.map[j+1][i]!=0) {
+                        this.merge(this.map[j+1][i], this.map[j][i]);
+                    }
+                }
+                k=0;
+                for(j=0;j<3;j++){//消除合并后可能产生的空块
+                    if(this.map[j][i]==0){
+                        if(k==0) k=j+1;
+                        while(k<4 && this.map[k][i]==0 && k++);
+                        if(k==4) break;
+                        this.map[k][i].position(i,j);
+                        this.map[j][i]=this.map[k][i];
+                        this.map[k][i]=0;
                     }
                 }
             }
         }
         if(keycode==39){//Right
-            for(i=3;i>=0;i--){
+            for(i=0;i<4;i++){
                 k=3;
-                for(j=3;j>=0;j--){
+                for(j=3;j>=1;j--){//所有块先移动
                     if(this.map[i][j]==0){
                         if(k==3) k=j-1;
                         while(k>=0 && this.map[i][k]==0 && k--);
                         if(k==-1) break;
-                        this.map[i][k].translate(j,i);
-                        GAME.map[i][j]=GAME.map[i][k];
-                        GAME.map[i][k]=0;
+                        this.map[i][k].position(j,i);
+                        this.map[i][j]=this.map[i][k];
+                        this.map[i][k]=0;
                     }
                 }
-                for(j=3;j>=0;j--){
-                    if(this.map[i][j]!=0 && this.map[i][j-1]!=0){
-                        this.merge(this.map[i][j-1],this.map[i][j]);
+                for(j=3;j>=1;j--){//相邻等值块合并
+                    if(this.map[i][j]!=0 && this.map[i][j-1]!=0) {
+                        this.merge(this.map[i][j-1], this.map[i][j]);
+                    }
+                }
+                k=3;
+                for(j=3;j>=1;j--){//消除合并后可能产生的空块
+                    if(this.map[i][j]==0){
+                        if(k==3) k=j-1;
+                        while(k>=0 && this.map[i][k]==0 && k--);
+                        if(k==-1) break;
+                        this.map[i][k].position(j,i);
+                        this.map[i][j]=this.map[i][k];
+                        this.map[i][k]=0;
                     }
                 }
             }
         }
         if(keycode==40){//Down
-
-        }
-        this.createBlock();
-    },
-    sleep:function(time){
-        var ot=new Date().getTime();
-        while(true){
-            var nt=new Date().getTime();
-            if(nt-ot>=time){
-                break;
+            for(i=0;i<4;i++){
+                k=3;
+                for(j=3;j>=1;j--){//所有块先移动
+                    if(this.map[j][i]==0){
+                        if(k==3) k=j-1;
+                        while(k>=0 && this.map[k][i]==0 && k--);
+                        if(k==-1) break;
+                        this.map[k][i].position(i,j);
+                        this.map[j][i]=this.map[k][i];
+                        this.map[k][i]=0;
+                    }
+                }
+                for(j=3;j>=1;j--){//相邻等值块合并
+                    if(this.map[j][i]!=0 && this.map[j-1][i]!=0) {
+                        this.merge(this.map[j-1][i], this.map[j][i]);
+                    }
+                }
+                k=3;
+                for(j=3;j>=1;j--){//消除合并后可能产生的空块
+                    if(this.map[j][i]==0){
+                        if(k==3) k=j-1;
+                        while(k>=0 && this.map[k][i]==0 && k--);
+                        if(k==-1) break;
+                        this.map[k][i].position(i,j);
+                        this.map[j][i]=this.map[k][i];
+                        this.map[k][i]=0;
+                    }
+                }
             }
+        }
+        if(keycode<=40 && keycode>=36) {
+            setTimeout(function () {
+                GAME.createBlock();
+                var numOfBlock = 0;
+                for (i = 0; i < 4; i++) {
+                    for (j = 0; j < 4; j++) {
+                        if (GAME.map[i][j] != 0){
+                            numOfBlock++;
+                            if(GAME.map[i][j].block.innerHTML>GAME.maxNum){
+                                GAME.maxNum=GAME.map[i][j].block.innerHTML
+                            }
+                        }
+                    }
+                }
+                //console.log(numOfBlock)
+                if (numOfBlock == 16) {
+                    alert("游戏结束!");
+                    window.location.reload();
+                }
+            }, 300)
         }
     }
 };
