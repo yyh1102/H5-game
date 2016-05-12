@@ -1,0 +1,17 @@
+*{
+    padding:0px;
+    margin:0px;
+}
+#stage{
+    margin:10px auto;
+    width:620px;
+    height:620px;
+    padding:10px;
+    border:2px solid #aaaaaa;
+}
+.block{
+    position: absolute;
+    width:200px;
+    height:200px;
+    background-color: aqua;
+}
