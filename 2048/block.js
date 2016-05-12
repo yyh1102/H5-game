@@ -19,7 +19,7 @@ function Block(){
         GAME.stage.appendChild(nwBlock);
     };
     this.translate=function(tx,ty) {
-        if(tx>3 || ty>3) return;
+        if(tx>3 || ty>3 || tx<0 || ty<0) return;
         var ox=this.x,
             oy=this.y,
             that=this,
@@ -27,18 +27,18 @@ function Block(){
             offsetY = ty - oy,
             speedX = offsetX / this.transTime,
             speedY = offsetY / this.transTime;
-        var tran = setInterval(function () {
+        while(true){
             ox += speedX;
             oy += speedY;
             that.position(ox,oy);
             if (ox >= tx && oy >= ty) {
                 that.position(tx,ty);
-                clearInterval(tran);
+                return;
             }
-        }, 1);
+            GAME.sleep(that.transTime);
+        }
     };
     this.setNumber=function(){
-        console.log(arguments[0])
         if(arguments[0]){
             return this.block.innerHTML=arguments[0];
         }

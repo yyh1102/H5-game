@@ -32,8 +32,9 @@ var GAME={
         var curr=currBlock.block.innerHTML;
         if(prev==curr){
             currBlock.setNumber(curr * 2);
-            this.map[prevBlock.y][prevBlock.x]=0;
-            this.stage.removeChild(prevBlock.block);
+            prevBlock.translate(currBlock.x,currBlock.y);
+            GAME.map[prevBlock.y][prevBlock.x]=0;
+            GAME.stage.removeChild(prevBlock.block);
         }
     },
     slide:function(keycode){
@@ -44,11 +45,11 @@ var GAME={
                 for(j=0;j<3;j++){
                     if(this.map[i][j]==0){
                         if(k==0) k=j+1;
-                        while(this.map[i][k]==0 && k<4 && k++);
+                        while(k<4 && this.map[i][k]==0 && k++);
                         if(k==4) break;
                         this.map[i][k].translate(j,i);
-                        this.map[i][j]=this.map[i][k];
-                        this.map[i][k]=0;
+                        GAME.map[i][j]=GAME.map[i][k];
+                        GAME.map[i][k]=0;
                     }
                 }
                 for(j=0;j<3;j++){
@@ -59,32 +60,59 @@ var GAME={
             }
         }
         if(keycode==38){//Top
-            for(j=0;j<4;j++){
+            for(i=0;i<4;i++){
                 k=0;
-                for(i=0;i<3;i++){
-                    if(this.map[i][j]==0){
+                for(j=0;j<3;j++){
+                    if(this.map[j][i]==0){
                         if(k==0) k=j+1;
-                        while(this.map[i][k]==0 && k<4 && k++);
+                        while(k<4 && this.map[k][i]==0 && k++);
                         if(k==4) break;
-                        this.map[i][k].translate(j,i);
-                        this.map[i][j]=this.map[i][k];
-                        this.map[i][k]=0;
+                        this.map[k][i].translate(i,j);
+                        GAME.map[j][i]=GAME.map[k][i];
+                        GAME.map[k][i]=0;
+
                     }
                 }
-                for(i=0;i<3;i++){
-                    if(this.map[i][j]!=0 && this.map[i+1][j]!=0){
-                        this.merge(this.map[i+1][j],this.map[i][j]);
+                for(j=0;j<3;j++){
+                    if(this.map[j][i]!=0 && this.map[j+1][i]!=0){
+                        this.merge(this.map[j+1][i],this.map[j][i]);
                     }
                 }
             }
         }
         if(keycode==39){//Right
-
+            for(i=3;i>=0;i--){
+                k=3;
+                for(j=3;j>=0;j--){
+                    if(this.map[i][j]==0){
+                        if(k==3) k=j-1;
+                        while(k>=0 && this.map[i][k]==0 && k--);
+                        if(k==-1) break;
+                        this.map[i][k].translate(j,i);
+                        GAME.map[i][j]=GAME.map[i][k];
+                        GAME.map[i][k]=0;
+                    }
+                }
+                for(j=3;j>=0;j--){
+                    if(this.map[i][j]!=0 && this.map[i][j-1]!=0){
+                        this.merge(this.map[i][j-1],this.map[i][j]);
+                    }
+                }
+            }
         }
         if(keycode==40){//Down
 
         }
         this.createBlock();
+    },
+    sleep:function(time){
+        var ot=new Date().getTime();
+        while(true){
+            var nt=new Date().getTime();
+            if(nt-ot>=time){
+                break;
+            }
+        }
     }
 };
 GAME.init();
