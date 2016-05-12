@@ -4,16 +4,22 @@ var GAME={
     blkArr:[],
     maxNum:0,
     score:0,
+    isKeyDown:0,
     init:function(){
         this.map=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
         this.createBlock();
         this.createBlock();
         this.createBlock();
         window.onkeydown=function(event){
+            if(GAME.isKeyDown) return;
             var e=event||window.event;
             if(e){
+                GAME.isKeyDown=1;
                 GAME.slide(e.keyCode);
             }
+        };
+        window.onkeyup=function(){
+            GAME.isKeyDown=0;
         };
         setInterval(function(){
             var score=document.getElementById("score");

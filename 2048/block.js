@@ -9,7 +9,7 @@ function Block(){
         var nwBlock=document.createElement("div");
         nwBlock.className="block";
         this.block=nwBlock;
-        this.width=this.height=150;
+        this.width=this.height=100;
         this.x=x;
         this.y=y;
         this.offset=7;
