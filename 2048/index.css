@@ -6,12 +6,16 @@
     margin:10px auto;
     width:620px;
     height:620px;
-    padding:10px;
+    padding:8px;
     border:2px solid #aaaaaa;
 }
 .block{
     position: absolute;
-    width:200px;
-    height:200px;
+    width:150px;
+    height:150px;
+    line-height:150px;
     background-color: aqua;
+    text-align: center;
+    font-size: 32px;
+    font-family: "Microsoft YaHei","Microsoft YaHei UI Light",sans-serif;
 }

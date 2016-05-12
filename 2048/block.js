@@ -9,12 +9,13 @@ function Block(){
         var nwBlock=document.createElement("div");
         nwBlock.className="block";
         this.block=nwBlock;
-        this.width=this.height=200;
+        this.width=this.height=150;
         this.x=x;
         this.y=y;
-        this.offset=10;
+        this.offset=7;
         this.transTime=50;
         this.position(x,y);
+        this.setNumber();
         GAME.stage.appendChild(nwBlock);
     };
     this.translate=function(tx,ty) {
@@ -37,6 +38,10 @@ function Block(){
         }, 1);
     };
     this.setNumber=function(){
+        console.log(arguments[0])
+        if(arguments[0]){
+            return this.block.innerHTML=arguments[0];
+        }
         var rand=Math.random();
         this.number=rand<=0.6?2:4;
         this.block.innerHTML=this.number;
@@ -45,13 +50,3 @@ function Block(){
         this.transTime=time;
     };
 }
-
-var blk=new Block();
-blk.create(0,0);
-setTimeout(function(){
-    blk.translate(1,1);
-},1000);
-var blk2=new Block();
-blk2.create(1,0);
-var blk3=new Block();
-blk3.create(2,0);
