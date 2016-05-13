@@ -5,6 +5,7 @@ var GAME={
     maxNum:0,
     score:0,
     isKeyDown:0,
+    isMove:0,
     init:function(){
         this.map=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
         this.createBlock();
@@ -44,6 +45,7 @@ var GAME={
         var curr=currBlock.block.innerHTML;
         //console.log(prev,curr);
         if(prev==curr){
+            if(!this.isMove) this.isMove=1;
             var prevx=prevBlock.x,
                 prevy=prevBlock.y;
             prevBlock.position(currBlock.x,currBlock.y);
@@ -185,7 +187,6 @@ var GAME={
         }
         if(keycode<=40 && keycode>=36) {
             setTimeout(function () {
-                GAME.createBlock();
                 var numOfBlock = 0;
                 for (i = 0; i < 4; i++) {
                     for (j = 0; j < 4; j++) {
@@ -198,9 +199,13 @@ var GAME={
                     }
                 }
                 //console.log(numOfBlock)
-                if (numOfBlock == 16) {
+                if (numOfBlock == 16 && !GAME.isMove) {
                     alert("游戏结束!");
                     window.location.reload();
+                }
+                else {
+                    GAME.isMove=0;
+                    GAME.createBlock();
                 }
             }, 300)
         }
