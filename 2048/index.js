@@ -57,10 +57,12 @@ var GAME={
                 this.stage.removeChild(prevBlock.block);
                 delete prevBlock;
             },300);
+            return true;
         }
+        return false;
     },
     slide:function(keycode){
-        var i, j, k;
+        var i, j, k, curr;
         if(keycode==37){//Left
             for(i=0;i<4;i++){
                 k=0;
@@ -76,7 +78,18 @@ var GAME={
                 }
                 for(j=0;j<3;j++){//相邻等值块合并
                     if(this.map[i][j]!=0 && this.map[i][j+1]!=0) {
-                        this.merge(this.map[i][j + 1], this.map[i][j]);
+                        if(this.merge(this.map[i][j + 1], this.map[i][j])){
+                            //防止相邻两两合并时方块无动画消失
+                            curr=k=j+1;
+                            while(k<4){
+                                if(this.map[i][k]!=0){
+                                    this.map[i][k].position(curr,i);
+                                    this.map[i][curr++]=this.map[i][k];
+                                    this.map[i][k]=0;
+                                }
+                                k++;
+                            }
+                        }
                     }
                 }
                 k=0;
@@ -107,7 +120,18 @@ var GAME={
                 }
                 for(j=0;j<3;j++){//相邻等值块合并
                     if(this.map[j][i]!=0 && this.map[j+1][i]!=0) {
-                        this.merge(this.map[j+1][i], this.map[j][i]);
+                        if(this.merge(this.map[j+1][i], this.map[j][i])){
+                            //防止相邻两两合并时方块无动画消失
+                            curr=k=j+1;
+                            while(k<4){
+                                if(this.map[k][i]!=0){
+                                    this.map[k][i].position(i,curr);
+                                    this.map[curr++][i]=this.map[k][i];
+                                    this.map[k][i]=0;
+                                }
+                                k++;
+                            }
+                        }
                     }
                 }
                 k=0;
@@ -138,7 +162,18 @@ var GAME={
                 }
                 for(j=3;j>=1;j--){//相邻等值块合并
                     if(this.map[i][j]!=0 && this.map[i][j-1]!=0) {
-                        this.merge(this.map[i][j-1], this.map[i][j]);
+                        if(this.merge(this.map[i][j - 1], this.map[i][j])){
+                            //防止相邻两两合并时方块无动画消失
+                            curr=k=j-1;
+                            while(k>=0){
+                                if(this.map[i][k]!=0){
+                                    this.map[i][k].position(curr,i);
+                                    this.map[i][curr--]=this.map[i][k];
+                                    this.map[i][k]=0;
+                                }
+                                k--;
+                            }
+                        }
                     }
                 }
                 k=3;
@@ -169,7 +204,18 @@ var GAME={
                 }
                 for(j=3;j>=1;j--){//相邻等值块合并
                     if(this.map[j][i]!=0 && this.map[j-1][i]!=0) {
-                        this.merge(this.map[j-1][i], this.map[j][i]);
+                        if(this.merge(this.map[j-1][i], this.map[j][i])){
+                            //防止相邻两两合并时方块无动画消失
+                            curr=k=j-1;
+                            while(k>=0){
+                                if(this.map[k][i]!=0){
+                                    this.map[k][i].position(i,curr);
+                                    this.map[curr--][i]=this.map[k][i];
+                                    this.map[k][i]=0;
+                                }
+                                k--;
+                            }
+                        }
                     }
                 }
                 k=3;
@@ -185,7 +231,7 @@ var GAME={
                 }
             }
         }
-        if(keycode<=40 && keycode>=36) {
+        if(keycode<=40 && keycode>=37) {
             setTimeout(function () {
                 var numOfBlock = 0;
                 for (i = 0; i < 4; i++) {
