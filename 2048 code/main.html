@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<?php session_start(); ?>
+<html>
+    <head>
+        <meta http-equiv = "Content-Type" conteng = "text/html;charset = utf-8">
+        <title>欢迎到来</title>
+        <style type="text/css">        
+        .div  
+        {  
+            height:1000px;  
+            width:700px;  
+            text-align:center;  
+            margin:20px;  
+              
+        }  
+        .text  
+        {  
+              
+              
+        }  
+        .button  
+        {  
+            font-size:10px;  
+              
+        }  
+        </style>
+    </head>
+    <body><center>
+        <h1>欢迎登陆2048</h1>
+        <form method="post" action="signup.php">
+            <label for = "username">用户名：</label>
+            <input type = "text" name = "username" id = "username" value="" /><br />
+            <label for = "pass">密码：</label>
+            <input type = "password" name = "pass" id = "pass" value="" />
+            <br />
+            <input type="submit" value="登录"  name="submit" />&nbsp;&nbsp;
+            <a href="register.php" >注  册</a>  
+
+        </form>
+        </center>
+    </body>
+</html>
